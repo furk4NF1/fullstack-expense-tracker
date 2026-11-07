@@ -22,6 +22,15 @@ export const expenseApi = {
   getCategories: () => request('/categories'),
   getExpenses: (month) => request(`/expenses?month=${encodeURIComponent(month)}`),
   getSummary: (month) => request(`/expenses/summary?month=${encodeURIComponent(month)}`),
+  getBudgets: (month) => request(`/budgets?month=${encodeURIComponent(month)}`),
+  saveBudget: (categoryId, month, amount) => request(
+    `/budgets/${categoryId}?month=${encodeURIComponent(month)}`,
+    { method: 'PUT', body: JSON.stringify({ amount }) }
+  ),
+  deleteBudget: (categoryId, month) => request(
+    `/budgets/${categoryId}?month=${encodeURIComponent(month)}`,
+    { method: 'DELETE' }
+  ),
   createExpense: (expense) => request('/expenses', {
     method: 'POST', body: JSON.stringify(expense)
   }),

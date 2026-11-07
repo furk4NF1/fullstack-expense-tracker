@@ -8,6 +8,7 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 - Kategori ve tarihe göre aylık kayıt listesi
 - Aylık gelir, gider ve net bakiye özeti
 - Kategori bazında aylık dağılım
+- Her ay ve kategori için ayrı harcama bütçesi ve limit aşımı uyarısı
 - Form doğrulama ve anlaşılır API hata yanıtları
 - PostgreSQL’de kalıcı veri saklama ve Flyway ile şema oluşturma
 - React ve Spring Boot katmanlarının ayrı tutulması
@@ -50,6 +51,9 @@ Veritabanı verileri Docker volume içinde tutulur. Yerel öğrenme ortamındaki
 | Kategorileri listele | `GET /api/categories` |
 | Masrafları listele | `GET /api/expenses?month=2026-11` |
 | Aylık özeti getir | `GET /api/expenses/summary?month=2026-11` |
+| Aylık kategori bütçelerini listele | `GET /api/budgets?month=2026-11` |
+| Kategori bütçesi belirle veya güncelle | `PUT /api/budgets/{categoryId}?month=2026-11` |
+| Kategori bütçesini kaldır | `DELETE /api/budgets/{categoryId}?month=2026-11` |
 | Masraf ekle | `POST /api/expenses` |
 | Masraf düzenle | `PUT /api/expenses/{id}` |
 | Masraf sil | `DELETE /api/expenses/{id}` |
@@ -63,6 +67,14 @@ Veritabanı verileri Docker volume içinde tutulur. Yerel öğrenme ortamındaki
   "description": "Market alışverişi",
   "expenseDate": "2026-11-05",
   "categoryId": 1
+}
+```
+
+`PUT /api/budgets/1?month=2026-11` için örnek JSON:
+
+```json
+{
+  "amount": 5000.00
 }
 ```
 
@@ -85,4 +97,4 @@ frontend/src/
 
 ## Sonraki geliştirmeler
 
-Kullanıcı hesabı ve oturum açma, bütçe hedefleri, CSV dışa aktarma ve çevrimiçi yayınlama sonraki sürümlere eklenebilir. İlk sürüm kişisel kullanım içindir; örnek veritabanı parolalarını internette yayınlanan bir sunucuda kullanma.
+Kullanıcı hesabı ve oturum açma, CSV dışa aktarma ve çevrimiçi yayınlama sonraki sürümlere eklenebilir. İlk sürüm kişisel kullanım içindir; örnek veritabanı parolalarını internette yayınlanan bir sunucuda kullanma.

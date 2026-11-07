@@ -121,6 +121,31 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
 .category-label strong { color: #39463f; font-size: 9px; }
 .progress-track { height: 5px; overflow: hidden; border-radius: 10px; background: #eff2ee; }
 .progress-track > span { display: block; height: 100%; border-radius: inherit; background: var(--category-color, var(--green)); transition: width .25s; }
+.budget-panel { margin-top: 18px; padding: 19px 20px; scroll-margin-top: 22px; }
+.budget-heading { margin-bottom: 17px; }
+.budget-subtitle { margin: 6px 0 0; color: var(--muted); font-size: 10px; }
+.budget-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.budget-item { min-width: 0; padding: 14px; border: 1px solid #edf0ec; border-radius: 11px; background: #fcfdfb; }
+.budget-item-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.budget-category-name { display: inline-flex; min-width: 0; align-items: center; gap: 8px; }
+.budget-category-name i { display: inline-block; width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%; background: var(--category-color, var(--green)); }
+.budget-category-name strong { overflow: hidden; color: #39463f; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.budget-spending { color: #66746b; font-size: 9px; text-align: right; white-space: nowrap; }
+.budget-progress { height: 6px; margin-top: 12px; overflow: hidden; border-radius: 10px; background: #e9efea; }
+.budget-progress > span { display: block; height: 100%; border-radius: inherit; background: var(--green); transition: width .25s; }
+.budget-progress.over-budget > span { background: #bd6653; }
+.budget-status { min-height: 12px; margin: 7px 0 11px; color: #87938b; font-size: 9px; }
+.budget-status.over-budget-text { color: #a64e42; font-weight: 700; }
+.budget-form { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: end; gap: 7px; }
+.budget-input-label { display: flex; min-width: 0; flex-direction: column; gap: 5px; color: #68756e; font-size: 9px; font-weight: 600; }
+.budget-input-wrap { display: flex; height: 34px; align-items: center; gap: 7px; padding: 0 9px; border: 1px solid #e5e9e4; border-radius: 7px; color: #89958d; background: white; }
+.budget-input-wrap:focus-within { border-color: #86ad98; box-shadow: 0 0 0 3px rgba(38, 115, 93, .08); }
+.budget-input-wrap input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 10px; }
+.budget-save-button, .budget-delete-button { min-height: 34px; padding: 0 10px; border: 0; border-radius: 7px; font-size: 9px; font-weight: 700; white-space: nowrap; }
+.budget-save-button { color: white; background: var(--green); }
+.budget-save-button:hover:not(:disabled) { background: var(--green-dark); }
+.budget-delete-button { color: #8c6357; background: #f7eeea; }
+.budget-delete-button:hover:not(:disabled) { background: #f1dfd7; }
 .loading-indicator { padding: 16px 0 0; color: var(--muted); font-size: 10px; }
 .page-footer { padding: 24px 0 0; color: #a4ada7; font-size: 9px; text-align: center; }
 
@@ -131,9 +156,12 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
 }
 
 @media (max-width: 800px) {
-  .sidebar { position: static; width: auto; min-height: auto; padding: 16px 20px; }
+  .sidebar { position: static; display: flex; width: auto; min-height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 5px; padding: 16px 20px; }
   .sidebar-section-label, .sidebar-note, .sidebar-footer { display: none; }
-  .nav-link { position: absolute; top: 14px; right: 18px; padding: 9px 11px; }
+  .brand { flex: 1 1 120px; gap: 8px; font-size: 14px; }
+  .brand-mark { width: 32px; height: 32px; }
+  .nav-link { position: static; padding: 8px 8px; font-size: 10px; }
+  .nav-link span { width: 14px; font-size: 14px; }
   .main-content { width: 100%; margin: 0; padding: 30px 22px 20px; }
   .content-grid { grid-template-columns: 1fr; }
   .form-panel { grid-row: 1; }
@@ -145,6 +173,7 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
   .page-subtitle { max-width: 205px; line-height: 1.5; }
   .month-picker input { min-width: 132px; }
   .summary-grid { grid-template-columns: 1fr; gap: 9px; }
+  .budget-list { grid-template-columns: 1fr; }
   .summary-card { min-height: 112px; padding: 15px 16px; }
   .summary-card > strong { font-size: 23px; }
   .expense-row { grid-template-columns: 9px minmax(0, 1fr) auto; gap: 8px; }
