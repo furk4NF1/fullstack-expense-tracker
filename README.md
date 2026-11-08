@@ -9,6 +9,7 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 - Aylık gelir, gider ve net bakiye özeti
 - Kategori bazında aylık dağılım
 - Her ay ve kategori için ayrı harcama bütçesi ve limit aşımı uyarısı
+- Seçili ayın işlem kayıtlarını Excel uyumlu CSV dosyası olarak indirme
 - Form doğrulama ve anlaşılır API hata yanıtları
 - PostgreSQL’de kalıcı veri saklama ve Flyway ile şema oluşturma
 - React ve Spring Boot katmanlarının ayrı tutulması
@@ -97,4 +98,4 @@ frontend/src/
 
 ## Sonraki geliştirmeler
 
-Kullanıcı hesabı ve oturum açma, CSV dışa aktarma ve çevrimiçi yayınlama sonraki sürümlere eklenebilir. İlk sürüm kişisel kullanım içindir; örnek veritabanı parolalarını internette yayınlanan bir sunucuda kullanma.
+Kullanıcı hesabı ve oturum açma, çevrimiçi yayınlama ve grafiklerle yıllık rapor sonraki sürümlere eklenebilir. İlk sürüm kişisel kullanım içindir; örnek veritabanı parolalarını internette yayınlanan bir sunucuda kullanma.

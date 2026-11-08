@@ -4,6 +4,7 @@ import BudgetPanel from './components/BudgetPanel.jsx';
 import ExpenseForm from './components/ExpenseForm.jsx';
 import ExpenseList from './components/ExpenseList.jsx';
 import SummaryPanel from './components/SummaryPanel.jsx';
+import { downloadMonthlyCsv } from './utils/exportCsv.js';
 
 function currentMonth() {
   const date = new Date();
@@ -152,10 +153,17 @@ export default function App() {
             <h1>Genel bakış</h1>
             <p className="page-subtitle">{monthTitle(selectedMonth)} için gelir ve gider durumun.</p>
           </div>
-          <label className="month-picker">
-            <span>Dönem</span>
-            <input type="month" value={selectedMonth} onChange={(event) => setSelectedMonth(event.target.value)} />
-          </label>
+          <div className="header-actions">
+            <label className="month-picker">
+              <span>Dönem</span>
+              <input type="month" value={selectedMonth} onChange={(event) => setSelectedMonth(event.target.value)} />
+            </label>
+            <button className="export-button" type="button" disabled={isLoading}
+              aria-label="Seçili ayın gelir ve gider kayıtlarını CSV olarak indir"
+              onClick={() => downloadMonthlyCsv(expenses, selectedMonth)}>
+              ↓ CSV indir
+            </button>
+          </div>
         </header>
 
         {error && <div className="alert error-alert" role="alert"><span>{error}</span><button type="button" onClick={loadDashboard}>Yeniden dene</button></div>}
