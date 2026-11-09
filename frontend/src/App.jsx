@@ -24,6 +24,8 @@ export default function App() {
   const [budgets, setBudgets] = useState([]);
   const [summary, setSummary] = useState(null);
   const [editingExpense, setEditingExpense] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('ALL');
   const [formKey, setFormKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -124,6 +126,15 @@ export default function App() {
     }
   }
 
+  const visibleExpenses = expenses.filter((expense) => {
+    const query = searchTerm.trim().toLocaleLowerCase('tr-TR');
+    const matchesSearch = !query
+      || expense.description.toLocaleLowerCase('tr-TR').includes(query)
+      || expense.categoryName.toLocaleLowerCase('tr-TR').includes(query);
+    const matchesType = typeFilter === 'ALL' || expense.type === typeFilter;
+    return matchesSearch && matchesType;
+  });
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -174,7 +185,10 @@ export default function App() {
           onDelete={deleteBudget} savingCategoryId={savingBudgetCategoryId} />
 
         <div className="content-grid">
-          <ExpenseList expenses={expenses} onEdit={setEditingExpense} onDelete={deleteExpense} />
+          <ExpenseList expenses={visibleExpenses} totalCount={expenses.length}
+            searchTerm={searchTerm} onSearchChange={setSearchTerm}
+            typeFilter={typeFilter} onTypeFilterChange={setTypeFilter}
+            onEdit={setEditingExpense} onDelete={deleteExpense} />
           <ExpenseForm key={formKey} categories={categories} selectedExpense={editingExpense} selectedMonth={selectedMonth} onSave={saveExpense}
             onCancel={() => setEditingExpense(null)} isSaving={isSaving} />
         </div>

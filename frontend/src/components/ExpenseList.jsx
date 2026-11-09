@@ -8,7 +8,7 @@ function formatMoney(value) {
   return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value);
 }
 
-export default function ExpenseList({ expenses, onEdit, onDelete }) {
+export default function ExpenseList({ expenses, totalCount, searchTerm, onSearchChange, typeFilter, onTypeFilterChange, onEdit, onDelete }) {
   return (
     <section className="panel list-panel" aria-labelledby="list-title">
       <div className="panel-heading list-heading">
@@ -16,14 +16,30 @@ export default function ExpenseList({ expenses, onEdit, onDelete }) {
           <p className="eyebrow">HAREKETLER</p>
           <h2 id="list-title">Son işlemler</h2>
         </div>
-        <span className="count-pill">{expenses.length} kayıt</span>
+        <span className="count-pill">{expenses.length}{expenses.length !== totalCount ? ` / ${totalCount}` : ''} kayıt</span>
+      </div>
+
+      <div className="expense-filters">
+        <label className="search-filter">
+          <span>İşlem ara</span>
+          <input type="search" value={searchTerm} onChange={(event) => onSearchChange(event.target.value)}
+            placeholder="Açıklama veya kategori" aria-label="Açıklama veya kategoriye göre işlemlerde ara" />
+        </label>
+        <label className="type-filter">
+          <span>Tür</span>
+          <select value={typeFilter} onChange={(event) => onTypeFilterChange(event.target.value)} aria-label="İşlem türüne göre filtrele">
+            <option value="ALL">Tümü</option>
+            <option value="INCOME">Gelir</option>
+            <option value="EXPENSE">Gider</option>
+          </select>
+        </label>
       </div>
 
       {expenses.length === 0 ? (
         <div className="empty-state">
           <span className="empty-mark" aria-hidden="true">₺</span>
-          <h3>Bu ay henüz işlem yok</h3>
-          <p>İlk gelir veya gider kaydını formdan ekleyebilirsin.</p>
+          <h3>{totalCount === 0 ? 'Bu ay henüz işlem yok' : 'Eşleşen işlem bulunamadı'}</h3>
+          <p>{totalCount === 0 ? 'İlk gelir veya gider kaydını formdan ekleyebilirsin.' : 'Arama kelimesini veya işlem türünü değiştirebilirsin.'}</p>
         </div>
       ) : (
         <ul className="expense-list">

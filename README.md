@@ -8,6 +8,7 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 - Kategori ve tarihe göre aylık kayıt listesi
 - Aylık gelir, gider ve net bakiye özeti
 - Kategori bazında aylık dağılım
+- İşlem açıklamasına veya kategorisine göre arama ve gelir/gider filtresi
 - Her ay ve kategori için ayrı harcama bütçesi ve limit aşımı uyarısı
 - Seçili ayın işlem kayıtlarını Excel uyumlu CSV dosyası olarak indirme
 - Form doğrulama ve anlaşılır API hata yanıtları
