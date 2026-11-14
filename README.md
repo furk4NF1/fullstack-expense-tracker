@@ -8,6 +8,7 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 - Kategori ve tarihe göre aylık kayıt listesi
 - Aylık gelir, gider ve net bakiye özeti
 - Kategori bazında aylık dağılım
+- Yıla göre aylık gelir-gider grafiği ve yıllık toplamlar
 - İşlem açıklamasına veya kategorisine göre arama ve gelir/gider filtresi
 - Her ay ve kategori için ayrı harcama bütçesi ve limit aşımı uyarısı
 - Seçili ayın işlem kayıtlarını Excel uyumlu CSV dosyası olarak indirme
@@ -53,6 +54,7 @@ Veritabanı verileri Docker volume içinde tutulur. Yerel öğrenme ortamındaki
 | Kategorileri listele | `GET /api/categories` |
 | Masrafları listele | `GET /api/expenses?month=2026-11` |
 | Aylık özeti getir | `GET /api/expenses/summary?month=2026-11` |
+| Yıllık özeti getir | `GET /api/expenses/annual-summary?year=2026` |
 | Aylık kategori bütçelerini listele | `GET /api/budgets?month=2026-11` |
 | Kategori bütçesi belirle veya güncelle | `PUT /api/budgets/{categoryId}?month=2026-11` |
 | Kategori bütçesini kaldır | `DELETE /api/budgets/{categoryId}?month=2026-11` |
@@ -100,3 +102,4 @@ frontend/src/
 ## Sonraki geliştirmeler
 
 Kullanıcı hesabı ve oturum açma, çevrimiçi yayınlama ve grafiklerle yıllık rapor sonraki sürümlere eklenebilir. İlk sürüm kişisel kullanım içindir; örnek veritabanı parolalarını internette yayınlanan bir sunucuda kullanma.
+

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { expenseApi } from './api/expenseApi.js';
+import AnnualReport from './components/AnnualReport.jsx';
 import BudgetPanel from './components/BudgetPanel.jsx';
 import ExpenseForm from './components/ExpenseForm.jsx';
 import ExpenseList from './components/ExpenseList.jsx';
@@ -181,6 +182,7 @@ export default function App() {
         {notice && <div className="alert success-alert" role="status">{notice}</div>}
 
         <SummaryPanel summary={summary} />
+        <AnnualReport />
         <BudgetPanel budgets={budgets} selectedMonth={selectedMonth} onSave={saveBudget}
           onDelete={deleteBudget} savingCategoryId={savingBudgetCategoryId} />
 
@@ -199,3 +201,4 @@ export default function App() {
     </div>
   );
 }
+

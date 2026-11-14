@@ -3,6 +3,7 @@ package com.portfolio.expensetracker.controller;
 import com.portfolio.expensetracker.dto.ExpenseRequest;
 import com.portfolio.expensetracker.dto.ExpenseResponse;
 import com.portfolio.expensetracker.dto.ExpenseSummaryResponse;
+import com.portfolio.expensetracker.dto.AnnualSummaryResponse;
 import com.portfolio.expensetracker.service.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -46,6 +47,11 @@ public class ExpenseController {
         return expenseService.getSummary(month);
     }
 
+    @GetMapping("/annual-summary")
+    public AnnualSummaryResponse getAnnualSummary(@RequestParam(required = false) Integer year) {
+        return expenseService.getAnnualSummary(year);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ExpenseResponse create(@Valid @RequestBody ExpenseRequest request) {
@@ -63,3 +69,4 @@ public class ExpenseController {
         expenseService.delete(id);
     }
 }
+

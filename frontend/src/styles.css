@@ -197,3 +197,40 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+.annual-report { margin-top: 18px; padding: 19px 20px 16px; }
+.annual-heading { align-items: flex-end; margin-bottom: 14px; }
+.annual-heading .eyebrow { margin-bottom: 6px; }
+.annual-subtitle { margin: 6px 0 0; color: var(--muted); font-size: 10px; }
+.annual-year-picker { display: flex; flex-direction: column; gap: 5px; color: var(--muted); font-size: 9px; font-weight: 600; }
+.annual-year-picker select { min-width: 94px; height: 34px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: white; font-size: 10px; }
+.annual-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.annual-total-card { display: flex; min-width: 0; flex-direction: column; gap: 6px; padding: 11px 13px; border: 1px solid #edf0ec; border-radius: 10px; background: #fbfcfa; }
+.annual-total-card > span { color: var(--muted); font-size: 9px; font-weight: 600; }
+.annual-total-card > strong { overflow: hidden; color: var(--ink); font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.annual-total-card .annual-income-total { color: #277658; }
+.annual-total-card .annual-expense-total { color: #a95c3c; }
+.annual-chart-scroll { width: 100%; overflow-x: auto; }
+.annual-chart { display: block; width: 100%; min-width: 560px; height: auto; margin-top: 13px; }
+.annual-gridline { stroke: #e9ece7; stroke-width: 1; }
+.annual-axis-label, .annual-month-label { fill: #7d8983; font-family: 'DM Sans', sans-serif; font-size: 10px; }
+.annual-month-label { font-size: 11px; }
+.annual-income-bar { fill: #63a47e; }
+.annual-expense-bar { fill: #d88969; }
+.annual-legend { display: flex; justify-content: center; gap: 18px; margin-top: 1px; color: #65736a; font-size: 9px; }
+.annual-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.annual-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; }
+.annual-legend-income { background: #63a47e; }
+.annual-legend-expense { background: #d88969; }
+.annual-status { margin: 10px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
+.annual-error { margin: 0; }
+
+@media (max-width: 560px) {
+  .annual-report { padding: 15px 14px 14px; }
+  .annual-heading { align-items: flex-start; }
+  .annual-totals { gap: 7px; }
+  .annual-total-card { padding: 10px 8px; }
+  .annual-total-card > strong { font-size: 11px; }
+  .annual-chart { min-width: 540px; }
+}
+

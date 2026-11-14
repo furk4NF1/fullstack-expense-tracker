@@ -22,6 +22,7 @@ export const expenseApi = {
   getCategories: () => request('/categories'),
   getExpenses: (month) => request(`/expenses?month=${encodeURIComponent(month)}`),
   getSummary: (month) => request(`/expenses/summary?month=${encodeURIComponent(month)}`),
+  getAnnualSummary: (year) => request(`/expenses/annual-summary?year=${encodeURIComponent(year)}`),
   getBudgets: (month) => request(`/budgets?month=${encodeURIComponent(month)}`),
   saveBudget: (categoryId, month, amount) => request(
     `/budgets/${categoryId}?month=${encodeURIComponent(month)}`,
@@ -39,3 +40,4 @@ export const expenseApi = {
   }),
   deleteExpense: (id) => request(`/expenses/${id}`, { method: 'DELETE' })
 };
+
