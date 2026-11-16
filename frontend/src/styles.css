@@ -202,8 +202,10 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
 .annual-heading { align-items: flex-end; margin-bottom: 14px; }
 .annual-heading .eyebrow { margin-bottom: 6px; }
 .annual-subtitle { margin: 6px 0 0; color: var(--muted); font-size: 10px; }
+.annual-controls { display: flex; align-items: flex-end; gap: 8px; }
 .annual-year-picker { display: flex; flex-direction: column; gap: 5px; color: var(--muted); font-size: 9px; font-weight: 600; }
 .annual-year-picker select { min-width: 94px; height: 34px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: white; font-size: 10px; }
+.annual-export-button { min-height: 34px; padding: 0 10px; font-size: 9px; }
 .annual-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .annual-total-card { display: flex; min-width: 0; flex-direction: column; gap: 6px; padding: 11px 13px; border: 1px solid #edf0ec; border-radius: 10px; background: #fbfcfa; }
 .annual-total-card > span { color: var(--muted); font-size: 9px; font-weight: 600; }
@@ -227,7 +229,8 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
 
 @media (max-width: 560px) {
   .annual-report { padding: 15px 14px 14px; }
-  .annual-heading { align-items: flex-start; }
+  .annual-heading { align-items: flex-start; flex-wrap: wrap; }
+  .annual-controls { width: 100%; justify-content: flex-end; }
   .annual-totals { gap: 7px; }
   .annual-total-card { padding: 10px 8px; }
   .annual-total-card > strong { font-size: 11px; }

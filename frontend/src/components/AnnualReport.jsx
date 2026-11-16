@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { expenseApi } from '../api/expenseApi.js';
+import { downloadAnnualCsv } from '../utils/exportCsv.js';
 import { formatMoney } from './ExpenseList.jsx';
 
 const chartWidth = 760;
@@ -69,12 +70,20 @@ export default function AnnualReport() {
           <h2 id="annual-report-title">Gelir ve gider trendi</h2>
           <p className="annual-subtitle">Aylara göre toplam gelir ve gider karşılaştırması</p>
         </div>
-        <label className="annual-year-picker">
-          <span>Yıl</span>
-          <select value={year} onChange={(event) => setYear(Number(event.target.value))}>
-            {years.map((option) => <option key={option} value={option}>{option}</option>)}
-          </select>
-        </label>
+        <div className="annual-controls">
+          <label className="annual-year-picker">
+            <span>Yıl</span>
+            <select value={year} onChange={(event) => setYear(Number(event.target.value))}>
+              {years.map((option) => <option key={option} value={option}>{option}</option>)}
+            </select>
+          </label>
+          <button className="export-button annual-export-button" type="button"
+            disabled={isLoading || Boolean(error) || !report}
+            aria-label={`${year} yılı aylık gelir ve gider raporunu CSV olarak indir`}
+            onClick={() => downloadAnnualCsv(report)}>
+            ↓ Yıllık CSV
+          </button>
+        </div>
       </div>
 
       <div className="annual-totals" aria-live="polite">
