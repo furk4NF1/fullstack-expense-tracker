@@ -80,6 +80,16 @@ export default function App() {
     }
   }
 
+  async function createCategory(payload) {
+    setError('');
+    setNotice('');
+    const category = await expenseApi.createCategory(payload);
+    setCategories((current) => [...current, category]
+      .sort((first, second) => first.name.localeCompare(second.name, 'tr')));
+    setNotice('Kategori eklendi.');
+    return category;
+  }
+
   async function deleteExpense(expense) {
     const confirmed = window.confirm(`“${expense.description}” kaydını silmek istiyor musun?`);
     if (!confirmed) return;
@@ -192,6 +202,7 @@ export default function App() {
             typeFilter={typeFilter} onTypeFilterChange={setTypeFilter}
             onEdit={setEditingExpense} onDelete={deleteExpense} />
           <ExpenseForm key={formKey} categories={categories} selectedExpense={editingExpense} selectedMonth={selectedMonth} onSave={saveExpense}
+            onCreateCategory={createCategory}
             onCancel={() => setEditingExpense(null)} isSaving={isSaving} />
         </div>
 

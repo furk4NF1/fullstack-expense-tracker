@@ -11,8 +11,13 @@ function emptyForm(selectedMonth) {
   return { type: 'EXPENSE', amount: '', description: '', expenseDate: defaultDate, categoryId: '' };
 }
 
-export default function ExpenseForm({ categories, selectedExpense, selectedMonth, onSave, onCancel, isSaving }) {
+export default function ExpenseForm({ categories, selectedExpense, selectedMonth, onSave, onCreateCategory, onCancel, isSaving }) {
   const [form, setForm] = useState(() => emptyForm(selectedMonth));
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryColor, setNewCategoryColor] = useState('#527a68');
+  const [categoryError, setCategoryError] = useState('');
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false);
 
   useEffect(() => {
     setForm(selectedExpense
@@ -40,6 +45,27 @@ export default function ExpenseForm({ categories, selectedExpense, selectedMonth
       expenseDate: form.expenseDate,
       categoryId: Number(form.categoryId)
     });
+  }
+
+  async function createCategory() {
+    const name = newCategoryName.trim();
+    if (!name) {
+      setCategoryError('Kategori adını yaz.');
+      return;
+    }
+
+    setIsCreatingCategory(true);
+    setCategoryError('');
+    try {
+      const category = await onCreateCategory({ name, color: newCategoryColor });
+      setForm((current) => ({ ...current, categoryId: String(category.id) }));
+      setNewCategoryName('');
+      setShowCategoryForm(false);
+    } catch (error) {
+      setCategoryError(error.message || 'Kategori eklenemedi.');
+    } finally {
+      setIsCreatingCategory(false);
+    }
   }
 
   return (
@@ -93,6 +119,40 @@ export default function ExpenseForm({ categories, selectedExpense, selectedMonth
           </div>
         </div>
 
+        <button className="text-button category-create-toggle" type="button"
+          aria-expanded={showCategoryForm} aria-controls="category-create-panel"
+          onClick={() => {
+            setShowCategoryForm((visible) => !visible);
+            setCategoryError('');
+          }}>
+          {showCategoryForm ? 'Kategori eklemeyi kapat' : '+ Yeni kategori ekle'}
+        </button>
+        {showCategoryForm && (
+          <div className="category-create-panel" id="category-create-panel" role="group" aria-label="Yeni kategori bilgileri">
+            <label className="category-create-field category-create-name" htmlFor="newCategoryName">
+              <span>Kategori adı</span>
+              <input id="newCategoryName" type="text" maxLength="80" value={newCategoryName}
+                placeholder="Örn. Eğitim" onChange={(event) => setNewCategoryName(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    createCategory();
+                  }
+                }} />
+            </label>
+            <label className="category-create-field category-create-color" htmlFor="newCategoryColor">
+              <span>Renk</span>
+              <input id="newCategoryColor" type="color" value={newCategoryColor}
+                onChange={(event) => setNewCategoryColor(event.target.value)} />
+            </label>
+            <button className="primary-button category-create-submit" type="button"
+              disabled={isCreatingCategory} onClick={createCategory}>
+              {isCreatingCategory ? 'Ekleniyor…' : 'Ekle'}
+            </button>
+            {categoryError && <p className="category-create-error" role="alert">{categoryError}</p>}
+          </div>
+        )}
+
         <button className="primary-button submit-button" type="submit" disabled={isSaving || categories.length === 0}>
           {isSaving ? 'Kaydediliyor…' : selectedExpense ? 'Değişiklikleri kaydet' : 'İşlemi kaydet'}
         </button>
@@ -100,3 +160,4 @@ export default function ExpenseForm({ categories, selectedExpense, selectedMonth
     </section>
   );
 }
+

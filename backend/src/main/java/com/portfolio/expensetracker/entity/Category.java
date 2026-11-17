@@ -23,6 +23,11 @@ public class Category {
     protected Category() {
     }
 
+    public Category(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+
     public Long getId() {
         return id;
     }
@@ -35,3 +40,4 @@ public class Category {
         return color;
     }
 }
+

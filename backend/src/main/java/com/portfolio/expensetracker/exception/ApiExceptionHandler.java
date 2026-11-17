@@ -14,6 +14,11 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiError> handleConflict(DuplicateResourceException exception) {
+        return response(HttpStatus.CONFLICT, exception.getMessage(), Map.of());
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException exception) {
         return response(HttpStatus.NOT_FOUND, exception.getMessage(), Map.of());
@@ -38,3 +43,4 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 }
+

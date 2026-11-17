@@ -20,6 +20,9 @@ async function request(path, options = {}) {
 
 export const expenseApi = {
   getCategories: () => request('/categories'),
+  createCategory: (category) => request('/categories', {
+    method: 'POST', body: JSON.stringify(category)
+  }),
   getExpenses: (month) => request(`/expenses?month=${encodeURIComponent(month)}`),
   getSummary: (month) => request(`/expenses/summary?month=${encodeURIComponent(month)}`),
   getAnnualSummary: (year) => request(`/expenses/annual-summary?year=${encodeURIComponent(year)}`),
