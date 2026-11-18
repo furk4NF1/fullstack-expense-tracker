@@ -5,7 +5,8 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 ## Özellikler
 
 - Gelir ve gider ekleme, düzenleme ve silme
-- Renk seçerek kişisel kategori ekleme
+- Kategori ekleme, adını ve rengini düzenleme
+- Kullanılmayan kategorileri silme; harcama veya bütçede kullanılan kategoriler korunur
 - Kategori ve tarihe göre aylık kayıt listesi
 - Aylık gelir, gider ve net bakiye özeti
 - Kategori bazında aylık dağılım
@@ -54,6 +55,8 @@ Veritabanı verileri Docker volume içinde tutulur. Yerel öğrenme ortamındaki
 | --- | --- |
 | Kategorileri listele | `GET /api/categories` |
 | Kategori ekle | `POST /api/categories` |
+| Kategori düzenle | `PUT /api/categories/{id}` |
+| Kullanılmayan kategoriyi sil | `DELETE /api/categories/{id}` |
 | Masrafları listele | `GET /api/expenses?month=2026-11` |
 | Aylık özeti getir | `GET /api/expenses/summary?month=2026-11` |
 | Yıllık özeti getir | `GET /api/expenses/annual-summary?year=2026` |

@@ -39,5 +39,10 @@ public class Category {
     public String getColor() {
         return color;
     }
+
+    public void update(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
 }
 

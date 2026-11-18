@@ -14,4 +14,7 @@ public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget, Lo
     Optional<MonthlyBudget> findByCategoryAndBudgetMonth(Category category, LocalDate budgetMonth);
 
     void deleteByCategoryAndBudgetMonth(Category category, LocalDate budgetMonth);
+
+    boolean existsByCategory_Id(Long categoryId);
 }
+

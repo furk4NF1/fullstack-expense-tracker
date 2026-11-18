@@ -23,6 +23,10 @@ export const expenseApi = {
   createCategory: (category) => request('/categories', {
     method: 'POST', body: JSON.stringify(category)
   }),
+  updateCategory: (id, category) => request(`/categories/${id}`, {
+    method: 'PUT', body: JSON.stringify(category)
+  }),
+  deleteCategory: (id) => request(`/categories/${id}`, { method: 'DELETE' }),
   getExpenses: (month) => request(`/expenses?month=${encodeURIComponent(month)}`),
   getSummary: (month) => request(`/expenses/summary?month=${encodeURIComponent(month)}`),
   getAnnualSummary: (year) => request(`/expenses/annual-summary?year=${encodeURIComponent(year)}`),

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { expenseApi } from './api/expenseApi.js';
 import AnnualReport from './components/AnnualReport.jsx';
 import BudgetPanel from './components/BudgetPanel.jsx';
+import CategoryManager from './components/CategoryManager.jsx';
 import ExpenseForm from './components/ExpenseForm.jsx';
 import ExpenseList from './components/ExpenseList.jsx';
 import SummaryPanel from './components/SummaryPanel.jsx';
@@ -88,6 +89,23 @@ export default function App() {
       .sort((first, second) => first.name.localeCompare(second.name, 'tr')));
     setNotice('Kategori eklendi.');
     return category;
+  }
+
+  async function updateCategory(id, payload) {
+    setError('');
+    setNotice('');
+    const category = await expenseApi.updateCategory(id, payload);
+    await loadDashboard();
+    setNotice('Kategori güncellendi.');
+    return category;
+  }
+
+  async function deleteCategory(id) {
+    setError('');
+    setNotice('');
+    await expenseApi.deleteCategory(id);
+    await loadDashboard();
+    setNotice('Kategori silindi.');
   }
 
   async function deleteExpense(expense) {
@@ -205,6 +223,8 @@ export default function App() {
             onCreateCategory={createCategory}
             onCancel={() => setEditingExpense(null)} isSaving={isSaving} />
         </div>
+
+        <CategoryManager categories={categories} onUpdate={updateCategory} onDelete={deleteCategory} isLoading={isLoading} />
 
         {isLoading && <div className="loading-indicator" role="status">Veriler yükleniyor…</div>}
         <footer className="page-footer">Gelir ve gider takibi · Kişisel kullanım için</footer>

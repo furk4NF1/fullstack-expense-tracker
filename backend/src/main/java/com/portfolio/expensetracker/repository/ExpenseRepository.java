@@ -10,4 +10,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<Expense> findAllByOrderByExpenseDateDescIdDesc();
 
     List<Expense> findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(LocalDate start, LocalDate end);
+
+    boolean existsByCategory_Id(Long categoryId);
 }
+
