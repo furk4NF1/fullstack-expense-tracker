@@ -63,6 +63,10 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
 .summary-card p { margin: 2px 0 9px; color: var(--muted); font-size: 10px; font-weight: 600; }
 .summary-card > strong { display: block; margin-bottom: 8px; font-family: Manrope, sans-serif; font-size: clamp(20px, 2vw, 27px); font-weight: 800; letter-spacing: -.8px; }
 .summary-caption { color: #9ca69f; font-size: 9px; }
+.summary-comparison { display: block; margin-top: 7px; font-size: 9px; font-weight: 700; }
+.summary-comparison-good { color: #2e8260; }
+.summary-comparison-bad { color: #b56d3e; }
+.summary-comparison-neutral { color: #89958d; }
 .summary-icon { position: absolute; top: 17px; right: 17px; display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; font-size: 17px; font-weight: 600; }
 .balance-card .summary-icon { color: #23664f; background: #e8f2ec; }
 .income-card .summary-icon { color: #2e8260; background: #e8f5ed; }

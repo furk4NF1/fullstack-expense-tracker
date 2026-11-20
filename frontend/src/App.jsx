@@ -13,6 +13,12 @@ function currentMonth() {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
+function previousMonth(value) {
+  const [year, month] = value.split('-').map(Number);
+  const date = new Date(year, month - 2, 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
 function monthTitle(value) {
   const [year, month] = value.split('-').map(Number);
   return new Intl.DateTimeFormat('tr-TR', { month: 'long', year: 'numeric' })
@@ -25,6 +31,7 @@ export default function App() {
   const [expenses, setExpenses] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [summary, setSummary] = useState(null);
+  const [previousSummary, setPreviousSummary] = useState(null);
   const [editingExpense, setEditingExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('ALL');
@@ -39,15 +46,17 @@ export default function App() {
     setIsLoading(true);
     setError('');
     try {
-      const [categoryData, expenseData, summaryData, budgetData] = await Promise.all([
+      const [categoryData, expenseData, summaryData, budgetData, previousSummaryData] = await Promise.all([
         expenseApi.getCategories(),
         expenseApi.getExpenses(selectedMonth),
         expenseApi.getSummary(selectedMonth),
-        expenseApi.getBudgets(selectedMonth)
+        expenseApi.getBudgets(selectedMonth),
+        expenseApi.getSummary(previousMonth(selectedMonth))
       ]);
       setCategories(categoryData);
       setExpenses(expenseData);
       setSummary(summaryData);
+      setPreviousSummary(previousSummaryData);
       setBudgets(budgetData);
     } catch (loadError) {
       setError(loadError.message);
@@ -57,6 +66,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    setPreviousSummary(null);
     loadDashboard();
   }, [selectedMonth]);
 
@@ -209,7 +219,8 @@ export default function App() {
         {error && <div className="alert error-alert" role="alert"><span>{error}</span><button type="button" onClick={loadDashboard}>Yeniden dene</button></div>}
         {notice && <div className="alert success-alert" role="status">{notice}</div>}
 
-        <SummaryPanel summary={summary} />
+        <SummaryPanel summary={summary} previousSummary={previousSummary}
+          previousMonthLabel={monthTitle(previousMonth(selectedMonth))} />
         <AnnualReport />
         <BudgetPanel budgets={budgets} selectedMonth={selectedMonth} onSave={saveBudget}
           onDelete={deleteBudget} savingCategoryId={savingBudgetCategoryId} />

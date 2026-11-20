@@ -9,6 +9,7 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 - Kullanılmayan kategorileri silme; harcama veya bütçede kullanılan kategoriler korunur
 - Kategori ve tarihe göre aylık kayıt listesi
 - Aylık gelir, gider ve net bakiye özeti
+- Gelir ve giderlerin önceki aya göre yüzde değişimi ve net bakiye karşılaştırması
 - Kategori bazında aylık dağılım
 - Yıla göre aylık gelir-gider grafiği ve yıllık toplamlar
 - İşlem açıklamasına veya kategorisine göre arama ve gelir/gider filtresi
