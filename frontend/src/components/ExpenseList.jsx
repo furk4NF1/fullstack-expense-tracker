@@ -8,7 +8,10 @@ function formatMoney(value) {
   return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value);
 }
 
-export default function ExpenseList({ expenses, totalCount, searchTerm, onSearchChange, typeFilter, onTypeFilterChange, onEdit, onDelete }) {
+export default function ExpenseList({ expenses, totalCount, categories, searchTerm, onSearchChange,
+  typeFilter, onTypeFilterChange, categoryFilter, onCategoryFilterChange, onClearFilters, onEdit, onDelete }) {
+  const hasActiveFilters = Boolean(searchTerm.trim()) || typeFilter !== 'ALL' || categoryFilter !== 'ALL';
+
   return (
     <section className="panel list-panel" aria-labelledby="list-title">
       <div className="panel-heading list-heading">
@@ -33,13 +36,26 @@ export default function ExpenseList({ expenses, totalCount, searchTerm, onSearch
             <option value="EXPENSE">Gider</option>
           </select>
         </label>
+        <label className="category-filter">
+          <span>Kategori</span>
+          <select value={categoryFilter} onChange={(event) => onCategoryFilterChange(event.target.value)}
+            aria-label="Kategoriye göre filtrele">
+            <option value="ALL">Tüm kategoriler</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            ))}
+          </select>
+        </label>
+        {hasActiveFilters && (
+          <button className="filter-clear-button" type="button" onClick={onClearFilters}>Filtreleri temizle</button>
+        )}
       </div>
 
       {expenses.length === 0 ? (
         <div className="empty-state">
           <span className="empty-mark" aria-hidden="true">₺</span>
           <h3>{totalCount === 0 ? 'Bu ay henüz işlem yok' : 'Eşleşen işlem bulunamadı'}</h3>
-          <p>{totalCount === 0 ? 'İlk gelir veya gider kaydını formdan ekleyebilirsin.' : 'Arama kelimesini veya işlem türünü değiştirebilirsin.'}</p>
+          <p>{totalCount === 0 ? 'İlk gelir veya gider kaydını formdan ekleyebilirsin.' : 'Arama kelimesini ya da filtreleri değiştirebilirsin.'}</p>
         </div>
       ) : (
         <ul className="expense-list">
@@ -66,3 +82,4 @@ export default function ExpenseList({ expenses, totalCount, searchTerm, onSearch
 }
 
 export { formatMoney };
+

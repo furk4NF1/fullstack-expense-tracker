@@ -35,6 +35,7 @@ export default function App() {
   const [editingExpense, setEditingExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('ALL');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [formKey, setFormKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -114,6 +115,7 @@ export default function App() {
     setError('');
     setNotice('');
     await expenseApi.deleteCategory(id);
+    if (categoryFilter === String(id)) setCategoryFilter('ALL');
     await loadDashboard();
     setNotice('Kategori silindi.');
   }
@@ -171,7 +173,8 @@ export default function App() {
       || expense.description.toLocaleLowerCase('tr-TR').includes(query)
       || expense.categoryName.toLocaleLowerCase('tr-TR').includes(query);
     const matchesType = typeFilter === 'ALL' || expense.type === typeFilter;
-    return matchesSearch && matchesType;
+    const matchesCategory = categoryFilter === 'ALL' || String(expense.categoryId) === categoryFilter;
+    return matchesSearch && matchesType && matchesCategory;
   });
 
   return (
@@ -226,9 +229,11 @@ export default function App() {
           onDelete={deleteBudget} savingCategoryId={savingBudgetCategoryId} />
 
         <div className="content-grid">
-          <ExpenseList expenses={visibleExpenses} totalCount={expenses.length}
+          <ExpenseList expenses={visibleExpenses} totalCount={expenses.length} categories={categories}
             searchTerm={searchTerm} onSearchChange={setSearchTerm}
             typeFilter={typeFilter} onTypeFilterChange={setTypeFilter}
+            categoryFilter={categoryFilter} onCategoryFilterChange={setCategoryFilter}
+            onClearFilters={() => { setSearchTerm(''); setTypeFilter('ALL'); setCategoryFilter('ALL'); }}
             onEdit={setEditingExpense} onDelete={deleteExpense} />
           <ExpenseForm key={formKey} categories={categories} selectedExpense={editingExpense} selectedMonth={selectedMonth} onSave={saveExpense}
             onCreateCategory={createCategory}
