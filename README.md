@@ -15,6 +15,7 @@ React, Java Spring Boot ve PostgreSQL ile hazırlanan katmanlı bir web uygulama
 - İşlem açıklamasına veya kategorisine göre arama ve gelir/gider filtresi
 - İşlem listesinde kategori filtresi ve tüm filtreleri tek tıkla temizleme
 - Her ay ve kategori için ayrı harcama bütçesi ve limit aşımı uyarısı
+- Maaş veya kira gibi aylık tekrarlanan işlemleri tanımlama ve seçilen aya uygulama
 - Seçili ayın işlem kayıtlarını Excel uyumlu CSV dosyası olarak indirme
 - Form doğrulama ve anlaşılır API hata yanıtları
 - E-posta ve parola ile hesap oluşturma, güvenli oturum açma ve çıkış
@@ -62,6 +63,9 @@ Docker kullanmadan parçaları ayrı ayrı çalıştırmak için Java 17 veya ü
 | Oturum aç | `POST /api/auth/login` |
 | Açık oturumu getir | `GET /api/auth/me` |
 | Oturumu kapat | `POST /api/auth/logout` |
+| Düzenli işlemleri listele veya oluştur | `GET /api/recurring-transactions`, `POST /api/recurring-transactions` |
+| Düzenli işlemi düzenle veya sil | `PUT /api/recurring-transactions/{id}`, `DELETE /api/recurring-transactions/{id}` |
+| Düzenli işlemleri seçili aya uygula | `POST /api/recurring-transactions/apply?month=2026-11` |
 | Kategorileri listele | `GET /api/categories` |
 | Kategori ekle | `POST /api/categories` |
 | Kategori düzenle | `PUT /api/categories/{id}` |
@@ -77,6 +81,8 @@ Docker kullanmadan parçaları ayrı ayrı çalıştırmak için Java 17 veya ü
 | Masraf sil | `DELETE /api/expenses/{id}` |
 
 Hesap oluşturma ve giriş istekleri `email` ve `password` alanlarını kullanır. Yeni parolalar en az 10 karakter olmalıdır. `POST`, `PUT` ve `DELETE` çağrılarından önce CSRF anahtarı `GET /api/auth/csrf` üzerinden alınır; React istemcisi bunu otomatik yapar.
+
+Aylık tekrarlanan işlemler kullanıcı tarafından seçilen aya uygulanır; otomatik zamanlama yapılmaz. Bir şablon aynı aya tekrar uygulanırsa ikinci bir kayıt oluşturulmaz. Ayda bulunmayan günler ayın son gününe alınır. Şablonu silmek önceden oluşturulmuş işlemleri silmez.
 
 `POST /api/expenses` için örnek JSON:
 

@@ -77,6 +77,18 @@ export const expenseApi = {
     `/budgets/${categoryId}?month=${encodeURIComponent(month)}`,
     { method: 'DELETE' }
   ),
+  getRecurringTransactions: () => request('/recurring-transactions'),
+  createRecurringTransaction: (transaction) => request('/recurring-transactions', {
+    method: 'POST', body: JSON.stringify(transaction)
+  }),
+  updateRecurringTransaction: (id, transaction) => request(`/recurring-transactions/${id}`, {
+    method: 'PUT', body: JSON.stringify(transaction)
+  }),
+  deleteRecurringTransaction: (id) => request(`/recurring-transactions/${id}`, { method: 'DELETE' }),
+  applyRecurringTransactions: (month) => request(
+    `/recurring-transactions/apply?month=${encodeURIComponent(month)}`,
+    { method: 'POST' }
+  ),
   createExpense: (expense) => request('/expenses', {
     method: 'POST', body: JSON.stringify(expense)
   }),

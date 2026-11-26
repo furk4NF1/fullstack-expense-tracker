@@ -23,7 +23,7 @@ const compactMoney = new Intl.NumberFormat('tr-TR', {
   maximumFractionDigits: 1
 });
 
-export default function AnnualReport() {
+export default function AnnualReport({ refreshKey = 0 }) {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const [report, setReport] = useState(null);
@@ -49,7 +49,7 @@ export default function AnnualReport() {
     return () => {
       isCurrent = false;
     };
-  }, [year]);
+  }, [year, refreshKey]);
 
   const months = report?.months ?? [];
   const maximum = Math.max(0, ...months.flatMap((month) => [
@@ -159,4 +159,3 @@ export default function AnnualReport() {
     </section>
   );
 }
-

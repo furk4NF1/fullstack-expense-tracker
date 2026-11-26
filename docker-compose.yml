@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: expense_user
       POSTGRES_PASSWORD: expense_password
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - expense_tracker_data:/var/lib/postgresql
     healthcheck:
@@ -21,8 +21,9 @@ services:
       DB_URL: jdbc:postgresql://database:5432/expense_tracker
       DB_USER: expense_user
       DB_PASSWORD: expense_password
+      SERVER_ADDRESS: 0.0.0.0
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       database:
         condition: service_healthy
@@ -31,8 +32,9 @@ services:
     build: ./frontend
     environment:
       API_PROXY_TARGET: http://backend:8080
+      VITE_HOST: 0.0.0.0
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     depends_on:
       - backend
 

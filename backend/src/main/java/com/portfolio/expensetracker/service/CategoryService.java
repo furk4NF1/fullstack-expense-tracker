@@ -11,6 +11,7 @@ import com.portfolio.expensetracker.repository.CategoryRepository;
 import com.portfolio.expensetracker.repository.ExpenseRepository;
 import com.portfolio.expensetracker.repository.MonthlyBudgetRepository;
 import com.portfolio.expensetracker.repository.UserRepository;
+import com.portfolio.expensetracker.repository.RecurringTransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,16 @@ public class CategoryService {
     private final ExpenseRepository expenseRepository;
     private final MonthlyBudgetRepository monthlyBudgetRepository;
     private final UserRepository userRepository;
+    private final RecurringTransactionRepository recurringRepository;
 
     public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository,
-                           MonthlyBudgetRepository monthlyBudgetRepository, UserRepository userRepository) {
+                           MonthlyBudgetRepository monthlyBudgetRepository, UserRepository userRepository,
+                           RecurringTransactionRepository recurringRepository) {
         this.categoryRepository = categoryRepository;
         this.expenseRepository = expenseRepository;
         this.monthlyBudgetRepository = monthlyBudgetRepository;
         this.userRepository = userRepository;
+        this.recurringRepository = recurringRepository;
     }
 
     public List<CategoryResponse> getAll(Long ownerId) {
@@ -65,9 +69,10 @@ public class CategoryService {
     public void delete(Long ownerId, Long id) {
         Category category = getCategory(id, ownerId);
         if (expenseRepository.existsByCategory_IdAndCategory_Owner_Id(id, ownerId)
-                || monthlyBudgetRepository.existsByCategory_IdAndCategory_Owner_Id(id, ownerId)) {
+                || monthlyBudgetRepository.existsByCategory_IdAndCategory_Owner_Id(id, ownerId)
+                || recurringRepository.existsByCategory_IdAndCategory_Owner_Id(id, ownerId)) {
             throw new ResourceInUseException(
-                    "Bu kategori kayıtlı bir harcamada veya bütçede kullanılıyor. Önce ilgili kayıtları ya da bütçeyi değiştir.");
+                    "Bu kategori bir işlemde, bütçede veya tekrarlayan işlemde kullanılıyor. Önce ilgili kaydı değiştir.");
         }
         categoryRepository.delete(category);
     }

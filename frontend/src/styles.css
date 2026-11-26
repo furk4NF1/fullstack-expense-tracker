@@ -64,6 +64,43 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .account-footer button { padding: 5px 7px; border: 1px solid #52695d; border-radius: 6px; color: #eaf0ec; background: transparent; font-size: 9px; }
 .account-footer button:hover { background: #2b463b; }
 
+.recurring-panel { margin-top: 18px; padding: 20px; scroll-margin-top: 22px; }
+.recurring-heading { align-items: flex-start; margin-bottom: 16px; }
+.recurring-copy { margin: 6px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.recurring-info { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 14px; border: 1px solid #dfebe2; border-radius: 10px; background: #f5faf6; }
+.recurring-info p { max-width: 620px; margin: 0; color: #5f7467; font-size: 10px; line-height: 1.6; }
+.recurring-apply { min-height: 36px; flex: 0 0 auto; padding: 0 14px; }
+.recurring-error, .recurring-notice { margin: 14px 0 0; font-size: 11px; line-height: 1.5; }
+.recurring-error { color: #9d3e45; }
+.recurring-notice { color: #1e654c; }
+.recurring-empty { padding: 18px 0 4px; }
+.recurring-list { margin: 10px 0 0; padding: 0; list-style: none; }
+.recurring-item { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; min-height: 65px; border-bottom: 1px solid #f0f2ef; }
+.recurring-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--category-color, #748078); }
+.recurring-item-detail { display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.recurring-item-detail strong { overflow: hidden; color: #33413a; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.recurring-item-detail span { color: #89958d; font-size: 10px; line-height: 1.4; }
+.recurring-amount { color: #a95c3c; font-size: 11px; white-space: nowrap; }
+.recurring-amount.income { color: #277658; }
+.recurring-actions { display: flex; gap: 3px; }
+.recurring-new { margin-top: 15px; padding: 6px 0; border: 0; color: var(--green-dark); background: transparent; font-size: 11px; font-weight: 700; }
+.recurring-new:hover { text-decoration: underline; }
+.recurring-form { margin-top: 16px; padding: 16px; border: 1px solid #e7eee8; border-radius: 10px; background: #fbfcfa; }
+.recurring-form h3 { margin: 0 0 13px; color: #39463f; font-size: 12px; }
+.recurring-form-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr 1fr .8fr; gap: 10px; }
+.recurring-form-grid label { display: flex; min-width: 0; flex-direction: column; gap: 6px; color: #68756e; font-size: 10px; font-weight: 600; }
+.recurring-form-grid input, .recurring-form-grid select { width: 100%; min-width: 0; height: 38px; padding: 0 9px; border: 1px solid #e0e7e1; border-radius: 8px; color: var(--ink); background: white; font-size: 11px; }
+.recurring-form-grid input:focus, .recurring-form-grid select:focus { outline: 2px solid #aacdb8; outline-offset: 1px; }
+.recurring-form-actions { display: flex; gap: 10px; margin-top: 14px; }
+.recurring-form-actions .primary-button { min-height: 36px; padding: 0 18px; }
+@media (max-width: 1050px) { .recurring-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .recurring-info { align-items: stretch; flex-direction: column; }
+  .recurring-item { grid-template-columns: 10px minmax(0, 1fr) auto; padding: 10px 0; }
+  .recurring-actions { grid-column: 2 / -1; }
+  .recurring-form-grid { grid-template-columns: 1fr; }
+}
+
 .main-content { width: min(100% - 248px, 1440px); margin-left: 248px; padding: 38px clamp(26px, 4vw, 58px) 22px; }
 .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
 .header-actions { display: flex; align-items: flex-end; gap: 9px; }

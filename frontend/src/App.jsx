@@ -6,6 +6,7 @@ import BudgetPanel from './components/BudgetPanel.jsx';
 import CategoryManager from './components/CategoryManager.jsx';
 import ExpenseForm from './components/ExpenseForm.jsx';
 import ExpenseList from './components/ExpenseList.jsx';
+import RecurringTransactions from './components/RecurringTransactions.jsx';
 import SummaryPanel from './components/SummaryPanel.jsx';
 import { downloadMonthlyCsv } from './utils/exportCsv.js';
 
@@ -30,6 +31,26 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [sessionError, setSessionError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    expenseApi.getCurrentUser()
+      .then((currentUser) => { if (active) setUser(currentUser); })
+      .catch((loadError) => { if (active) setSessionError(loadError.message); })
+      .finally(() => { if (active) setIsCheckingSession(false); });
+    return () => { active = false; };
+  }, []);
+
+  if (isCheckingSession) {
+    return <main className="auth-page"><p className="auth-loading" role="status">Hesap kontrol ediliyor…</p></main>;
+  }
+
+  if (!user) return <AuthScreen onAuthenticated={setUser} initialError={sessionError} />;
+
+  return <Dashboard key={user.id} user={user} onLoggedOut={() => setUser(null)} />;
+}
+
+function Dashboard({ user, onLoggedOut }) {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [categories, setCategories] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -41,21 +62,14 @@ export default function App() {
   const [typeFilter, setTypeFilter] = useState('ALL');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [formKey, setFormKey] = useState(0);
+  const [annualRefreshKey, setAnnualRefreshKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [savingBudgetCategoryId, setSavingBudgetCategoryId] = useState(null);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
 
-  useEffect(() => {
-    expenseApi.getCurrentUser()
-      .then(setUser)
-      .catch((loadError) => setSessionError(loadError.message))
-      .finally(() => setIsCheckingSession(false));
-  }, []);
-
   async function loadDashboard() {
-    if (!user) return;
     setIsLoading(true);
     setError('');
     try {
@@ -79,22 +93,14 @@ export default function App() {
   }
 
   useEffect(() => {
-    if (!user) return;
     setPreviousSummary(null);
     loadDashboard();
-  }, [selectedMonth, user?.id]);
+  }, [selectedMonth]);
 
   async function logout() {
     try {
       await expenseApi.logout();
-      setUser(null);
-      setCategories([]);
-      setExpenses([]);
-      setBudgets([]);
-      setSummary(null);
-      setPreviousSummary(null);
-      setError('');
-      setNotice('');
+      onLoggedOut();
     } catch (logoutError) {
       setError(logoutError.message);
     }
@@ -206,12 +212,6 @@ export default function App() {
     return matchesSearch && matchesType && matchesCategory;
   });
 
-  if (isCheckingSession) {
-    return <main className="auth-page"><p className="auth-loading" role="status">Hesap kontrol ediliyor…</p></main>;
-  }
-
-  if (!user) return <AuthScreen onAuthenticated={setUser} initialError={sessionError} />;
-
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -223,6 +223,7 @@ export default function App() {
         <div className="sidebar-section-label">ÇALIŞMA ALANI</div>
         <a className="nav-link active" href="#dashboard"><span aria-hidden="true">▦</span> Genel bakış</a>
         <a className="nav-link" href="#budgets"><span aria-hidden="true">◷</span> Bütçeler</a>
+        <a className="nav-link" href="#recurring"><span aria-hidden="true">↻</span> Düzenli işlemler</a>
         <div className="sidebar-note">
           <span className="note-icon" aria-hidden="true">✦</span>
           <strong>Kontrol sende</strong>
@@ -264,9 +265,15 @@ export default function App() {
 
         <SummaryPanel summary={summary} previousSummary={previousSummary}
           previousMonthLabel={monthTitle(previousMonth(selectedMonth))} />
-        <AnnualReport />
+        <AnnualReport refreshKey={annualRefreshKey} />
         <BudgetPanel budgets={budgets} selectedMonth={selectedMonth} onSave={saveBudget}
           onDelete={deleteBudget} savingCategoryId={savingBudgetCategoryId} />
+
+        <RecurringTransactions categories={categories} selectedMonth={selectedMonth}
+          monthLabel={monthTitle(selectedMonth)} onApplied={async () => {
+            await loadDashboard();
+            setAnnualRefreshKey((key) => key + 1);
+          }} />
 
         <div className="content-grid">
           <ExpenseList expenses={visibleExpenses} totalCount={expenses.length} categories={categories}
