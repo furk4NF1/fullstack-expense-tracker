@@ -39,6 +39,10 @@ async function request(path, options = {}) {
 }
 
 export const expenseApi = {
+  getSavingsGoals: () => request('/savings-goals'),
+  createSavingsGoal: (goal) => request('/savings-goals', { method: 'POST', body: JSON.stringify(goal) }),
+  updateSavingsGoal: (id, goal) => request(`/savings-goals/${id}`, { method: 'PUT', body: JSON.stringify(goal) }),
+  deleteSavingsGoal: (id) => request(`/savings-goals/${id}`, { method: 'DELETE' }),
   getCurrentUser: async () => {
     try {
       return await request('/auth/me');

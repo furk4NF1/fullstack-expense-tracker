@@ -8,6 +8,7 @@ import ExpenseForm from './components/ExpenseForm.jsx';
 import ExpenseList from './components/ExpenseList.jsx';
 import RecurringTransactions from './components/RecurringTransactions.jsx';
 import SummaryPanel from './components/SummaryPanel.jsx';
+import SavingsGoals from './components/SavingsGoals.jsx';
 import { downloadMonthlyCsv } from './utils/exportCsv.js';
 
 function currentMonth() {
@@ -223,6 +224,7 @@ function Dashboard({ user, onLoggedOut }) {
         <div className="sidebar-section-label">ÇALIŞMA ALANI</div>
         <a className="nav-link active" href="#dashboard"><span aria-hidden="true">▦</span> Genel bakış</a>
         <a className="nav-link" href="#budgets"><span aria-hidden="true">◷</span> Bütçeler</a>
+        <a className="nav-link" href="#savings"><span aria-hidden="true">◎</span> Birikim hedefleri</a>
         <a className="nav-link" href="#recurring"><span aria-hidden="true">↻</span> Düzenli işlemler</a>
         <div className="sidebar-note">
           <span className="note-icon" aria-hidden="true">✦</span>
@@ -266,6 +268,7 @@ function Dashboard({ user, onLoggedOut }) {
         <SummaryPanel summary={summary} previousSummary={previousSummary}
           previousMonthLabel={monthTitle(previousMonth(selectedMonth))} />
         <AnnualReport refreshKey={annualRefreshKey} />
+        <SavingsGoals />
         <BudgetPanel budgets={budgets} selectedMonth={selectedMonth} onSave={saveBudget}
           onDelete={deleteBudget} savingCategoryId={savingBudgetCategoryId} />
 

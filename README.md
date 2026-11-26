@@ -133,3 +133,11 @@ frontend/src/
 ## Güvenlik notu
 
 Bu proje öğrenme ve yerel kullanım içindir. İnternette yayınlamadan önce HTTPS, güçlü veritabanı parolaları, e-posta doğrulama, parola yenileme ve giriş deneme sınırı gibi üretim ihtiyaçları ayrıca yapılandırılmalıdır.
+# Birikim hedefleri
+
+Kullanıcılar **Birikim hedefleri** bölümünde ad, hedef tutarı, mevcut birikim ve isteğe bağlı hedef tarihiyle kişisel hedef oluşturabilir; düzenleyebilir ve silebilir. İlerleme yüzdesi, kalan tutar ve tamamlanma durumu gösterilir. Hedef tarihi geçen tamamlanmamış hedefler ayrıca işaretlenir.
+
+Birikim tutarı elle güncellenen toplamdır; gelir-gider kayıtlarından otomatik hesaplanmaz ve bakiyeyi değiştirmez. Hedefler ay filtresinden bağımsızdır. Hedef tutarından fazla birikim kaydedilebilir.
+
+API: `GET/POST /api/savings-goals`, `PUT/DELETE /api/savings-goals/{id}`. Güncellemede son yanıttaki `version` gönderilir; eski sürümle güncelleme 409 döndürür. Tüm işlemler oturum sahibine göre sınırlandırılır. V5 geçişi mevcut kayıtları değiştirmeden yeni tabloyu oluşturur.
+

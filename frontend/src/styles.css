@@ -335,3 +335,21 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
   .annual-total-card > strong { font-size: 11px; }
   .annual-chart { min-width: 540px; }
 }
+.savings-panel { margin: 20px 0; padding: 24px; scroll-margin-top: 20px; }
+.savings-note { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.savings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-top: 18px; }
+.savings-card { border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: #fbfcfa; min-width: 0; }
+.savings-card-heading { display: flex; align-items: start; gap: 12px; justify-content: space-between; }
+.savings-card h3 { margin: 0; overflow-wrap: anywhere; font-size: 16px; }
+.savings-badge { border-radius: 20px; padding: 5px 8px; background: #eef1ed; color: #526355; font-size: 10px; white-space: nowrap; }
+.savings-badge.complete { background: #dcefe3; color: #235b3a; }
+.savings-amount { font-size: 21px; font-weight: 700; overflow-wrap: anywhere; }
+.savings-amount span { font-size: 12px; font-weight: 400; color: var(--muted); }
+.savings-card progress { display: block; width: 100%; height: 10px; border: 0; border-radius: 8px; overflow: hidden; background: #e5ebe5; accent-color: #3a8054; }
+.savings-card progress::-webkit-progress-bar { background: #e5ebe5; border-radius: 8px; }
+.savings-card progress::-webkit-progress-value { background: #3a8054; border-radius: 8px; }
+.savings-card progress::-moz-progress-bar { background: #3a8054; }
+.savings-progress-copy { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; margin-top: 9px; }
+.savings-date { font-size: 12px; color: var(--muted); margin: 18px 0; }
+.savings-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
+@media (max-width: 560px) { .savings-panel { padding: 16px; } .savings-card { padding: 16px; } }
