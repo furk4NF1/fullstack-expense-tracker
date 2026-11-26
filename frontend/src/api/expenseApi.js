@@ -1,24 +1,62 @@
 const API_ROOT = '/api';
+let csrfToken = null;
+
+async function getCsrfToken() {
+  if (csrfToken) return csrfToken;
+  const response = await fetch(`${API_ROOT}/auth/csrf`, { credentials: 'include' });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || !body.token) throw new Error('Güvenli bağlantı başlatılamadı. Sayfayı yenileyip tekrar dene.');
+  csrfToken = body.token;
+  return csrfToken;
+}
 
 async function request(path, options = {}) {
+  const method = (options.method || 'GET').toUpperCase();
+  const headers = {
+    ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+    ...options.headers
+  };
+  if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+    headers['X-XSRF-TOKEN'] = await getCsrfToken();
+  }
+
   const response = await fetch(`${API_ROOT}${path}`, {
     ...options,
-    headers: {
-      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-      ...options.headers
-    }
+    method,
+    credentials: 'include',
+    headers
   });
 
   if (response.status === 204) return null;
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
     const details = Object.values(body.fieldErrors || {}).join(' ');
-    throw new Error(details || body.message || 'İstek tamamlanamadı.');
+    const error = new Error(details || body.message || 'İstek tamamlanamadı.');
+    error.status = response.status;
+    throw error;
   }
   return body;
 }
 
 export const expenseApi = {
+  getCurrentUser: async () => {
+    try {
+      return await request('/auth/me');
+    } catch (error) {
+      if (error.status === 401) return null;
+      throw error;
+    }
+  },
+  login: (credentials) => request('/auth/login', {
+    method: 'POST', body: JSON.stringify(credentials)
+  }),
+  register: (credentials) => request('/auth/register', {
+    method: 'POST', body: JSON.stringify(credentials)
+  }),
+  logout: async () => {
+    await request('/auth/logout', { method: 'POST' });
+    csrfToken = null;
+  },
   getCategories: () => request('/categories'),
   createCategory: (category) => request('/categories', {
     method: 'POST', body: JSON.stringify(category)
@@ -47,4 +85,3 @@ export const expenseApi = {
   }),
   deleteExpense: (id) => request(`/expenses/${id}`, { method: 'DELETE' })
 };
-

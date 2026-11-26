@@ -37,16 +37,16 @@ public class MonthlyBudgetService {
     }
 
     @Transactional(readOnly = true)
-    public List<BudgetResponse> getBudgets(YearMonth requestedMonth) {
+    public List<BudgetResponse> getBudgets(Long ownerId, YearMonth requestedMonth) {
         YearMonth month = requestedMonth == null ? YearMonth.now() : requestedMonth;
         LocalDate monthStart = month.atDay(1);
         Map<Long, MonthlyBudget> budgetsByCategory = new HashMap<>();
-        budgetRepository.findAllByBudgetMonth(monthStart).forEach(budget ->
+        budgetRepository.findAllByCategory_Owner_IdAndBudgetMonth(ownerId, monthStart).forEach(budget ->
                 budgetsByCategory.put(budget.getCategory().getId(), budget));
 
         Map<Long, BigDecimal> spendingByCategory = new HashMap<>();
-        List<Expense> expenses = expenseRepository.findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(
-                monthStart, month.atEndOfMonth());
+        List<Expense> expenses = expenseRepository.findByCategory_Owner_IdAndExpenseDateBetweenOrderByExpenseDateDescIdDesc(
+                ownerId, monthStart, month.atEndOfMonth());
         for (Expense expense : expenses) {
             if (expense.getType() == TransactionType.EXPENSE) {
                 spendingByCategory.merge(
@@ -54,7 +54,7 @@ public class MonthlyBudgetService {
             }
         }
 
-        return categoryRepository.findAllByOrderByNameAsc().stream()
+        return categoryRepository.findAllByOwner_IdOrderByNameAsc(ownerId).stream()
                 .map(category -> toResponse(
                         category,
                         Optional.ofNullable(budgetsByCategory.get(category.getId())),
@@ -64,9 +64,9 @@ public class MonthlyBudgetService {
     }
 
     @Transactional
-    public BudgetResponse saveBudget(Long categoryId, YearMonth requestedMonth, BudgetRequest request) {
+    public BudgetResponse saveBudget(Long ownerId, Long categoryId, YearMonth requestedMonth, BudgetRequest request) {
         YearMonth month = requestedMonth == null ? YearMonth.now() : requestedMonth;
-        Category category = findCategory(categoryId);
+        Category category = findCategory(categoryId, ownerId);
         LocalDate monthStart = month.atDay(1);
 
         MonthlyBudget budget = budgetRepository.findByCategoryAndBudgetMonth(category, monthStart)
@@ -77,8 +77,8 @@ public class MonthlyBudgetService {
                 .orElseGet(() -> new MonthlyBudget(category, monthStart, request.amount()));
         budgetRepository.save(budget);
 
-        BigDecimal spent = expenseRepository.findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(
-                        monthStart, month.atEndOfMonth()).stream()
+        BigDecimal spent = expenseRepository.findByCategory_Owner_IdAndExpenseDateBetweenOrderByExpenseDateDescIdDesc(
+                        ownerId, monthStart, month.atEndOfMonth()).stream()
                 .filter(expense -> expense.getType() == TransactionType.EXPENSE)
                 .filter(expense -> expense.getCategory().getId().equals(categoryId))
                 .map(Expense::getAmount)
@@ -87,14 +87,14 @@ public class MonthlyBudgetService {
     }
 
     @Transactional
-    public void deleteBudget(Long categoryId, YearMonth requestedMonth) {
+    public void deleteBudget(Long ownerId, Long categoryId, YearMonth requestedMonth) {
         YearMonth month = requestedMonth == null ? YearMonth.now() : requestedMonth;
-        Category category = findCategory(categoryId);
+        Category category = findCategory(categoryId, ownerId);
         budgetRepository.deleteByCategoryAndBudgetMonth(category, month.atDay(1));
     }
 
-    private Category findCategory(Long categoryId) {
-        return categoryRepository.findById(categoryId)
+    private Category findCategory(Long categoryId, Long ownerId) {
+        return categoryRepository.findByIdAndOwner_Id(categoryId, ownerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seçilen kategori bulunamadı."));
     }
 

@@ -7,10 +7,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
-    List<Expense> findAllByOrderByExpenseDateDescIdDesc();
+    List<Expense> findByCategory_Owner_IdOrderByExpenseDateDescIdDesc(Long ownerId);
 
-    List<Expense> findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(LocalDate start, LocalDate end);
+    List<Expense> findByCategory_Owner_IdAndExpenseDateBetweenOrderByExpenseDateDescIdDesc(
+            Long ownerId, LocalDate start, LocalDate end);
 
-    boolean existsByCategory_Id(Long categoryId);
+    java.util.Optional<Expense> findByIdAndCategory_Owner_Id(Long id, Long ownerId);
+
+    boolean existsByCategory_IdAndCategory_Owner_Id(Long categoryId, Long ownerId);
 }
-

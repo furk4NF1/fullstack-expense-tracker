@@ -37,19 +37,19 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public List<ExpenseResponse> getAll(YearMonth month) {
+    public List<ExpenseResponse> getAll(Long ownerId, YearMonth month) {
         List<Expense> expenses = month == null
-                ? expenseRepository.findAllByOrderByExpenseDateDescIdDesc()
-                : expenseRepository.findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(
-                        month.atDay(1), month.atEndOfMonth());
+                ? expenseRepository.findByCategory_Owner_IdOrderByExpenseDateDescIdDesc(ownerId)
+                : expenseRepository.findByCategory_Owner_IdAndExpenseDateBetweenOrderByExpenseDateDescIdDesc(
+                        ownerId, month.atDay(1), month.atEndOfMonth());
         return expenses.stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
-    public ExpenseSummaryResponse getSummary(YearMonth requestedMonth) {
+    public ExpenseSummaryResponse getSummary(Long ownerId, YearMonth requestedMonth) {
         YearMonth month = requestedMonth == null ? YearMonth.now() : requestedMonth;
-        List<Expense> expenses = expenseRepository.findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(
-                month.atDay(1), month.atEndOfMonth());
+        List<Expense> expenses = expenseRepository.findByCategory_Owner_IdAndExpenseDateBetweenOrderByExpenseDateDescIdDesc(
+                ownerId, month.atDay(1), month.atEndOfMonth());
 
         BigDecimal incomeTotal = BigDecimal.ZERO;
         BigDecimal expenseTotal = BigDecimal.ZERO;
@@ -81,11 +81,12 @@ public class ExpenseService {
     }
 
     @Transactional(readOnly = true)
-    public AnnualSummaryResponse getAnnualSummary(Integer requestedYear) {
+    public AnnualSummaryResponse getAnnualSummary(Long ownerId, Integer requestedYear) {
         int year = requestedYear == null ? LocalDate.now().getYear() : requestedYear;
         LocalDate start = LocalDate.of(year, 1, 1);
         LocalDate end = LocalDate.of(year, 12, 31);
-        List<Expense> expenses = expenseRepository.findByExpenseDateBetweenOrderByExpenseDateDescIdDesc(start, end);
+        List<Expense> expenses = expenseRepository.findByCategory_Owner_IdAndExpenseDateBetweenOrderByExpenseDateDescIdDesc(
+                ownerId, start, end);
 
         BigDecimal incomeTotal = BigDecimal.ZERO;
         BigDecimal expenseTotal = BigDecimal.ZERO;
@@ -115,33 +116,33 @@ public class ExpenseService {
     }
 
     @Transactional
-    public ExpenseResponse create(ExpenseRequest request) {
-        Category category = findCategory(request.categoryId());
+    public ExpenseResponse create(Long ownerId, ExpenseRequest request) {
+        Category category = findCategory(request.categoryId(), ownerId);
         Expense expense = new Expense(
                 request.type(), request.amount(), request.description().trim(), request.expenseDate(), category);
         return toResponse(expenseRepository.save(expense));
     }
 
     @Transactional
-    public ExpenseResponse update(Long id, ExpenseRequest request) {
-        Expense expense = findExpense(id);
-        Category category = findCategory(request.categoryId());
+    public ExpenseResponse update(Long ownerId, Long id, ExpenseRequest request) {
+        Expense expense = findExpense(id, ownerId);
+        Category category = findCategory(request.categoryId(), ownerId);
         expense.update(request.type(), request.amount(), request.description().trim(), request.expenseDate(), category);
         return toResponse(expenseRepository.save(expense));
     }
 
     @Transactional
-    public void delete(Long id) {
-        expenseRepository.delete(findExpense(id));
+    public void delete(Long ownerId, Long id) {
+        expenseRepository.delete(findExpense(id, ownerId));
     }
 
-    private Expense findExpense(Long id) {
-        return expenseRepository.findById(id)
+    private Expense findExpense(Long id, Long ownerId) {
+        return expenseRepository.findByIdAndCategory_Owner_Id(id, ownerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bu kayıt bulunamadı."));
     }
 
-    private Category findCategory(Long id) {
-        return categoryRepository.findById(id)
+    private Category findCategory(Long id, Long ownerId) {
+        return categoryRepository.findByIdAndOwner_Id(id, ownerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seçilen kategori bulunamadı."));
     }
 
@@ -152,4 +153,3 @@ public class ExpenseService {
                 expense.getExpenseDate(), category.getId(), category.getName(), category.getColor());
     }
 }
-

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { expenseApi } from './api/expenseApi.js';
+import AuthScreen from './components/AuthScreen.jsx';
 import AnnualReport from './components/AnnualReport.jsx';
 import BudgetPanel from './components/BudgetPanel.jsx';
 import CategoryManager from './components/CategoryManager.jsx';
@@ -26,6 +27,9 @@ function monthTitle(value) {
 }
 
 export default function App() {
+  const [user, setUser] = useState(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [sessionError, setSessionError] = useState('');
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [categories, setCategories] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -43,7 +47,15 @@ export default function App() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
 
+  useEffect(() => {
+    expenseApi.getCurrentUser()
+      .then(setUser)
+      .catch((loadError) => setSessionError(loadError.message))
+      .finally(() => setIsCheckingSession(false));
+  }, []);
+
   async function loadDashboard() {
+    if (!user) return;
     setIsLoading(true);
     setError('');
     try {
@@ -67,9 +79,26 @@ export default function App() {
   }
 
   useEffect(() => {
+    if (!user) return;
     setPreviousSummary(null);
     loadDashboard();
-  }, [selectedMonth]);
+  }, [selectedMonth, user?.id]);
+
+  async function logout() {
+    try {
+      await expenseApi.logout();
+      setUser(null);
+      setCategories([]);
+      setExpenses([]);
+      setBudgets([]);
+      setSummary(null);
+      setPreviousSummary(null);
+      setError('');
+      setNotice('');
+    } catch (logoutError) {
+      setError(logoutError.message);
+    }
+  }
 
   async function saveExpense(payload) {
     setIsSaving(true);
@@ -177,6 +206,12 @@ export default function App() {
     return matchesSearch && matchesType && matchesCategory;
   });
 
+  if (isCheckingSession) {
+    return <main className="auth-page"><p className="auth-loading" role="status">Hesap kontrol ediliyor…</p></main>;
+  }
+
+  if (!user) return <AuthScreen onAuthenticated={setUser} initialError={sessionError} />;
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -196,6 +231,11 @@ export default function App() {
 
         <div className="sidebar-footer">
           <span className="status-dot" /> Veriler PostgreSQL’de saklanır
+        </div>
+        <div className="account-footer">
+          <span className="account-avatar" aria-hidden="true">{user.email.slice(0, 1).toLocaleUpperCase('tr-TR')}</span>
+          <span className="account-email" title={user.email}>{user.email}</span>
+          <button type="button" onClick={logout}>Çıkış</button>
         </div>
       </aside>
 
@@ -248,4 +288,3 @@ export default function App() {
     </div>
   );
 }
-

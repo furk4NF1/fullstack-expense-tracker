@@ -9,12 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget, Long> {
-    List<MonthlyBudget> findAllByBudgetMonth(LocalDate budgetMonth);
+    List<MonthlyBudget> findAllByCategory_Owner_IdAndBudgetMonth(Long ownerId, LocalDate budgetMonth);
 
     Optional<MonthlyBudget> findByCategoryAndBudgetMonth(Category category, LocalDate budgetMonth);
 
     void deleteByCategoryAndBudgetMonth(Category category, LocalDate budgetMonth);
 
-    boolean existsByCategory_Id(Long categoryId);
+    boolean existsByCategory_IdAndCategory_Owner_Id(Long categoryId, Long ownerId);
 }
-

@@ -22,6 +22,24 @@ button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .6; }
 
 .app-shell { min-height: 100vh; }
+.auth-page { display: grid; min-height: 100vh; place-items: center; padding: 30px 18px; background: radial-gradient(circle at 14% 14%, #e8f2ec 0, transparent 30%), #f5f6f2; }
+.auth-card { width: min(100%, 440px); padding: 36px; border: 1px solid #e8ece7; border-radius: 20px; background: white; box-shadow: 0 22px 70px rgba(28, 48, 41, .09); }
+.auth-brand { margin-bottom: 34px; color: var(--ink); }
+.auth-card .eyebrow { margin-bottom: 9px; }
+.auth-card h1 { margin-bottom: 8px; font-size: 27px; letter-spacing: -.9px; }
+.auth-subtitle { margin-bottom: 23px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.legacy-data-note { margin: 0 0 20px; padding: 12px 13px; border: 1px solid #dcebe0; border-radius: 9px; color: #426653; background: #f1f7f2; font-size: 11px; line-height: 1.55; }
+.auth-error { margin: 0 0 16px; padding: 11px 13px; border-radius: 8px; color: #9d3e45; background: #fff0ee; font-size: 11px; line-height: 1.5; }
+.auth-form { display: flex; flex-direction: column; }
+.auth-form label { margin: 0 0 6px; color: #526158; font-size: 11px; font-weight: 700; }
+.auth-form input { width: 100%; height: 44px; margin: 0 0 17px; padding: 0 12px; border: 1px solid #e0e7e1; border-radius: 9px; outline: 0; color: var(--ink); background: #fbfcfa; font-size: 13px; }
+.auth-form input:focus { border-color: #86ad98; box-shadow: 0 0 0 3px rgba(38, 115, 93, .09); }
+.password-hint { margin: -10px 0 16px; color: var(--muted); font-size: 10px; }
+.auth-submit { width: 100%; min-height: 45px; margin-top: 3px; font-size: 12px; }
+.auth-switch { margin: 22px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+.auth-switch button { padding: 0; border: 0; color: var(--green-dark); background: transparent; font-size: inherit; font-weight: 700; }
+.auth-switch button:hover { text-decoration: underline; }
+.auth-loading { color: var(--muted); font-size: 13px; }
 .sidebar {
   position: fixed; inset: 0 auto 0 0; z-index: 2; display: flex; width: 248px; flex-direction: column;
   padding: 30px 20px 22px; color: #eaf0ec; background: #1c3029;
@@ -39,6 +57,11 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .sidebar-note p { margin: 6px 0 0; color: #adbbb2; font-size: 10px; line-height: 1.55; }
 .sidebar-footer { display: flex; align-items: center; gap: 7px; margin: 17px 0 0 4px; color: #9fb0a5; font-size: 9px; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #71c39b; }
+.account-footer { display: grid; grid-template-columns: 29px minmax(0, 1fr) auto; align-items: center; gap: 8px; margin-top: 16px; padding-top: 15px; border-top: 1px solid #385145; }
+.account-avatar { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 50%; color: #1c3029; background: #b9ddc8; font-size: 12px; font-weight: 800; }
+.account-email { overflow: hidden; color: #eaf0ec; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.account-footer button { padding: 5px 7px; border: 1px solid #52695d; border-radius: 6px; color: #eaf0ec; background: transparent; font-size: 9px; }
+.account-footer button:hover { background: #2b463b; }
 
 .main-content { width: min(100% - 248px, 1440px); margin-left: 248px; padding: 38px clamp(26px, 4vw, 58px) 22px; }
 .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
@@ -274,4 +297,3 @@ h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.4px; }
   .annual-total-card > strong { font-size: 11px; }
   .annual-chart { min-width: 540px; }
 }
-

@@ -3,9 +3,10 @@ package com.portfolio.expensetracker.controller;
 import com.portfolio.expensetracker.dto.CategoryResponse;
 import com.portfolio.expensetracker.dto.CategoryRequest;
 import com.portfolio.expensetracker.service.CategoryService;
+import com.portfolio.expensetracker.security.AppUserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -29,25 +29,26 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryResponse> getCategories() {
-        return categoryService.getAll();
+    public List<CategoryResponse> getCategories(@AuthenticationPrincipal AppUserPrincipal principal) {
+        return categoryService.getAll(principal.getId());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryResponse create(@Valid @RequestBody CategoryRequest request) {
-        return categoryService.create(request);
+    public CategoryResponse create(@Valid @RequestBody CategoryRequest request,
+                                   @AuthenticationPrincipal AppUserPrincipal principal) {
+        return categoryService.create(principal.getId(), request);
     }
 
     @PutMapping("/{id}")
-    public CategoryResponse update(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
-        return categoryService.update(id, request);
+    public CategoryResponse update(@PathVariable Long id, @Valid @RequestBody CategoryRequest request,
+                                   @AuthenticationPrincipal AppUserPrincipal principal) {
+        return categoryService.update(principal.getId(), id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        categoryService.delete(id);
+    public void delete(@PathVariable Long id, @AuthenticationPrincipal AppUserPrincipal principal) {
+        categoryService.delete(principal.getId(), id);
     }
 }
-

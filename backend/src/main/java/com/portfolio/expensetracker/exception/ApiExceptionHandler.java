@@ -43,9 +43,13 @@ public class ApiExceptionHandler {
                 "İstek biçimi geçersiz. Tarih YYYY-AA-GG, ay YYYY-AA biçiminde olmalı.", Map.of());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleInvalidArgument(IllegalArgumentException exception) {
+        return response(HttpStatus.BAD_REQUEST, exception.getMessage(), Map.of());
+    }
+
     private ResponseEntity<ApiError> response(HttpStatus status, String message, Map<String, String> errors) {
         ApiError body = new ApiError(Instant.now(), status.value(), message, errors);
         return ResponseEntity.status(status).body(body);
     }
 }
-
