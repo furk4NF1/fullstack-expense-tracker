@@ -132,12 +132,40 @@ frontend/src/
 
 ## Güvenlik notu
 
-Bu proje öğrenme ve yerel kullanım içindir. İnternette yayınlamadan önce HTTPS, güçlü veritabanı parolaları, e-posta doğrulama, parola yenileme ve giriş deneme sınırı gibi üretim ihtiyaçları ayrıca yapılandırılmalıdır.
-# Birikim hedefleri
+Bu proje öğrenme ve yerel kullanım içindir. İnternette yayınlamadan önce HTTPS, güçlü veritabanı parolaları, e-posta doğrulama, gerçek SMTP teslimatı ve giriş deneme sınırı gibi üretim ihtiyaçları ayrıca yapılandırılmalıdır.
+## Birikim hedefleri
 
 Kullanıcılar **Birikim hedefleri** bölümünde ad, hedef tutarı, mevcut birikim ve isteğe bağlı hedef tarihiyle kişisel hedef oluşturabilir; düzenleyebilir ve silebilir. İlerleme yüzdesi, kalan tutar ve tamamlanma durumu gösterilir. Hedef tarihi geçen tamamlanmamış hedefler ayrıca işaretlenir.
 
 Birikim tutarı elle güncellenen toplamdır; gelir-gider kayıtlarından otomatik hesaplanmaz ve bakiyeyi değiştirmez. Hedefler ay filtresinden bağımsızdır. Hedef tutarından fazla birikim kaydedilebilir.
 
 API: `GET/POST /api/savings-goals`, `PUT/DELETE /api/savings-goals/{id}`. Güncellemede son yanıttaki `version` gönderilir; eski sürümle güncelleme 409 döndürür. Tüm işlemler oturum sahibine göre sınırlandırılır. V5 geçişi mevcut kayıtları değiştirmeden yeni tabloyu oluşturur.
+
+## Şifremi unuttum
+
+Giriş ekranından sıfırlama bağlantısı istenebilir. E-postadaki bağlantı 30 dakika geçerlidir ve tek kullanımlıktır. Yeni bağlantı önceki bağlantıyı geçersiz kılar. Şifre yenilendiğinde mevcut oturumlar sonraki istekte kapatılır; kullanıcı yeniden giriş yapar. Mevcut finans kayıtları korunur.
+
+- `POST /api/auth/forgot-password`: `{"email":"kullanici@example.com"}`
+- `POST /api/auth/reset-password`: `{"token":"epostadaki-token","password":"yeni-sifre"}`
+- Her iki istek de CSRF belirteci gerektirir. En az 10 karakter ve en fazla 72 UTF-8 bayt şifre kabul edilir.
+- Rastgele 256 bit belirteçlerin yalnızca SHA-256 özetleri veritabanında tutulur. Ham bağlantı API yanıtına veya uygulama günlüğüne yazılmaz; e-postayla iletilir.
+- E-posta adresinin kayıtlı olup olmadığı açıklanmaz. Teslimat sınırlı bir arka plan kuyruğunda yapılır. Her 15 dakikada IP başına 10 istek, adres başına 3 e-posta ve IP başına 30 sıfırlama denemesi sınırı vardır.
+- Sınırlar tek uygulama sürecine aittir ve yeniden başlatmada sıfırlanır. Birden fazla sunucu için ortak sınırlandırıcı gerekir. İstemcinin gönderdiği yönlendirme başlıklarına güvenilmez; yerel Vite proxy üzerinden istekler aynı IP sınırını paylaşabilir.
+
+### Gerçek e-posta gönderimi
+
+Varsayılan olarak gönderim kapalıdır; istek tüm adreslerde açıklayıcı bir 503 yanıtı verir. SMTP kurmadan gönderildiği iddia edilmez. Sunucuyu başlatmadan önce şu ortam değişkenlerini ayarlayın:
+
+| Değişken | Açıklama |
+| --- | --- |
+| PASSWORD_RESET_ENABLED | `true` |
+| PASSWORD_RESET_BASE_URL | Güvenilir uygulama adresi; yerelde `http://localhost:4173/`, Docker'da `http://localhost:5173/`; internette HTTPS |
+| PASSWORD_RESET_FROM | Gönderici e-posta adresi |
+| SMTP_HOST / SMTP_PORT | Posta sağlayıcısının sunucusu ve STARTTLS portu (varsayılan 587) |
+| SMTP_USERNAME / SMTP_PASSWORD | Posta sağlayıcısının kullanıcı adı ve uygulama şifresi |
+| SMTP_AUTH / SMTP_STARTTLS | Gerçek posta hizmetinde `true`; yalnızca yerel deneme SMTP sunucusunda `false` |
+
+Posta sağlayıcısının uygulama şifresini kullanın; sırları GitHub'a yüklemeyin. Docker Compose değişkenleri kökteki git tarafından yok sayılan `.env` dosyasından alabilir; doğrudan Maven çalıştırırken ortam değişkenlerini ayrıca ayarlayın. Bağlantı adresi isteğin Host başlığından üretilmez. Adresi değiştirince backend'i yeniden başlatın.
+
+Posta bağlantısı için [Spring Boot e-posta yapılandırması](https://docs.spring.io/spring-boot/reference/io/email.html) kullanılır; bağlantı, okuma ve yazma zaman aşımı 5 saniyedir. Gönderim başarısız olursa belirteç iptal edilir ve kişisel bilgi içermeyen bir uyarı kaydedilir. Yerel SMTP ile teslimat, süre sonu, tek kullanım/eşzamanlı istek, eski bağlantının iptali, eski oturumların kapanması, hesap ayrımı ve CSRF kontrolleri doğrulandı. Gerçek sağlayıcıya teslimat ayrıca doğrulanmalıdır.
 

@@ -9,6 +9,7 @@ import ExpenseList from './components/ExpenseList.jsx';
 import RecurringTransactions from './components/RecurringTransactions.jsx';
 import SummaryPanel from './components/SummaryPanel.jsx';
 import SavingsGoals from './components/SavingsGoals.jsx';
+import PasswordRecovery from './components/PasswordRecovery.jsx';
 import { downloadMonthlyCsv } from './utils/exportCsv.js';
 
 function currentMonth() {
@@ -29,6 +30,18 @@ function monthTitle(value) {
 }
 
 export default function App() {
+  const [resetToken, setResetToken] = useState(() => window.location.hash.startsWith('#reset-password=') ? window.location.hash.slice(16) : null);
+  useEffect(() => {
+    const readLink = () => {
+      if (window.location.hash.startsWith('#reset-password=')) {
+        setResetToken(window.location.hash.slice(16));
+        window.history.replaceState(null, '', window.location.pathname + window.location.search + '#reset-password');
+      }
+    };
+    readLink();
+    window.addEventListener('hashchange', readLink);
+    return () => window.removeEventListener('hashchange', readLink);
+  }, []);
   const [user, setUser] = useState(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [sessionError, setSessionError] = useState('');
@@ -41,6 +54,10 @@ export default function App() {
       .finally(() => { if (active) setIsCheckingSession(false); });
     return () => { active = false; };
   }, []);
+
+  if (resetToken !== null) return <PasswordRecovery token={resetToken} onBack={() => {
+    setResetToken(null); setUser(null); window.location.hash = 'top';
+  }} />;
 
   if (isCheckingSession) {
     return <main className="auth-page"><p className="auth-loading" role="status">Hesap kontrol ediliyor…</p></main>;

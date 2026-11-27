@@ -68,9 +68,12 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                           org.springframework.jdbc.core.JdbcTemplate jdbc,
                                            CsrfTokenRepository csrfTokenRepository,
                                            SecurityContextRepository securityContextRepository) throws Exception {
         http
+                .addFilterBefore(new com.portfolio.expensetracker.security.PasswordSessionFilter(jdbc),
+                        org.springframework.security.web.access.intercept.AuthorizationFilter.class)
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(csrfTokenRepository)
@@ -79,7 +82,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionFixation(fixation -> fixation.changeSessionId()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login",
+                                "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(AbstractHttpConfigurer::disable)

@@ -39,6 +39,8 @@ async function request(path, options = {}) {
 }
 
 export const expenseApi = {
+  forgotPassword: (email) => request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) }),
+  resetPassword: (token, password) => request('/auth/reset-password', { method: 'POST', body: JSON.stringify({ token, password }) }),
   getSavingsGoals: () => request('/savings-goals'),
   createSavingsGoal: (goal) => request('/savings-goals', { method: 'POST', body: JSON.stringify(goal) }),
   updateSavingsGoal: (id, goal) => request(`/savings-goals/${id}`, { method: 'PUT', body: JSON.stringify(goal) }),

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { expenseApi } from '../api/expenseApi.js';
+import PasswordRecovery from './PasswordRecovery.jsx';
 
 export default function AuthScreen({ onAuthenticated, initialError = '' }) {
+  const [recovering, setRecovering] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +26,7 @@ export default function AuthScreen({ onAuthenticated, initialError = '' }) {
     }
   }
 
+  if (recovering) return <PasswordRecovery onBack={() => setRecovering(false)} />;
   return (
     <main className="auth-page">
       <section className="auth-card" aria-labelledby="auth-title">
@@ -60,6 +63,7 @@ export default function AuthScreen({ onAuthenticated, initialError = '' }) {
           </button>
         </form>
 
+        {!isRegistering && <p className="auth-switch"><button type="button" disabled={isSubmitting} onClick={() => setRecovering(true)}>Şifremi unuttum</button></p>}
         <p className="auth-switch">
           {isRegistering ? 'Zaten hesabın var mı?' : 'Henüz hesabın yok mu?'}{' '}
           <button type="button" onClick={() => { setIsRegistering(!isRegistering); setError(''); }}>

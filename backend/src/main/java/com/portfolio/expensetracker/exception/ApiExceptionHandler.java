@@ -14,6 +14,10 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
+    public ResponseEntity<ApiError> handleStatus(org.springframework.web.server.ResponseStatusException exception) {
+        return response(HttpStatus.valueOf(exception.getStatusCode().value()), exception.getReason(), Map.of());
+    }
     @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<ApiError> handleStaleUpdate(Exception exception) {
         return response(HttpStatus.CONFLICT, "Hedef başka bir sekmede değişti. Listeyi yenileyip tekrar dene.", Map.of());
